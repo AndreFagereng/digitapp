@@ -1,3 +1,7 @@
+# MNIST data and uploaded files
+data/mnist
+data/downloads
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

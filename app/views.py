@@ -20,7 +20,7 @@ def upload_image():
 		try:
 			save_image(img_decoded)
 		except:
-			print('An error occured. Read exception')
+			print('An error occured while saving image.')
 
 		return render_template("index.html")
 
