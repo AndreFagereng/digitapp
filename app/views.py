@@ -3,6 +3,9 @@ from flask import render_template, request, redirect
 import os
 import base64
 import time
+from utils import png_to_array
+from models import CNN_model
+import numpy as np
 
 
 @app.route("/", methods=['GET'])
@@ -15,12 +18,11 @@ def upload_image():
 	if request.method == 'POST':
 		img_b64 = request.values['imageBase64'].split(',')
 		algorithm = request.values['algorithm']
-
+		print(algorithm)
 		img_decoded = base64.b64decode(img_b64[1])
-		try:
-			save_image(img_decoded)
-		except:
-			print('An error occured while saving image.')
+
+		image_path = save_image(img_decoded)
+		prediction = predict_image(image_path, algorithm)
 
 		return render_template("index.html")
 
@@ -37,7 +39,25 @@ def save_image(image):
 	filename = str(time.strftime('%Y%m%d-%H%M%S'))
 	with open(path + filename + '.png', 'wb') as file:
 		file.write(image)
+	return str(os.path.join(path, filename))
 
+def predict_image(image_path, model):
 
+	image = png_to_array(image_path + '.png')
 
+	if model == 'CNN':
+
+		cnn = CNN_model()
+		cnn.load_weights('./checkpoints/checkpoint_1')
+
+		prediction = cnn.predict(image)
+		argmax = np.argmax(prediction)
+		print('Prediction: ',argmax)
+		print(prediction)
+		return np.argmax(prediction)
+
+	elif model == 'DNN':
+		pass
+
+	return 1
 

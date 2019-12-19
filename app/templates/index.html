@@ -38,7 +38,8 @@
     
 //canvas = document.getElementById('canvas')
 context = document.getElementById('canvas').getContext("2d");
-
+context.fillStyle = "black"
+context.fillRect(0, 0, canvas.width, canvas.height);
 //var dataURL = canvas.toDataURL('image/png');
 
     
@@ -87,7 +88,7 @@ var clickY = new Array();
 var clickDrag = new Array();
 var paint;
 document.getElementById('clear').addEventListener('click', function() {
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillRect(0, 0, canvas.width, canvas.height);
     clickX = new Array()
     clickY = new Array()
 
@@ -101,10 +102,11 @@ function addClick(x, y, dragging){
 
 function redraw(){
   context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-  
-  context.strokeStyle = "black";
+  context.fillStyle = "black"
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.strokeStyle = "white";
   context.lineJoin = "round";
-  context.lineWidth = 10;
+  context.lineWidth = 30;
 			
   for(var i=0; i < clickX.length; i++) {		
     context.beginPath();
