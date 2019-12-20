@@ -3,6 +3,7 @@ from tensorflow.keras import datasets, layers, models
 from utils import load_mnist_digits
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from config import _config
 
 class DNN_model(tf.keras.Model):
 	def __init__(self):
@@ -47,13 +48,13 @@ class CNN_model(tf.keras.Model):
 		
 		return self.softmax(x)
 
-
 def fit_models():
 
-	EPOCHS  = 5
-	BATCH_S = 32 
-	LEARNING_RATE = 0.5
-	MOMENTUM	  = 0.9
+
+	EPOCHS  = _config['CNN']['EPOCHS']
+	BATCH_S = _config['CNN']['BATCH_S'] 
+	LEARNING_RATE = _config['CNN']['LEARNING_RATE']
+	MOMENTUM	  = _config['CNN']['MOMENTUM']
 	
 	optimizer_sgd = tf.keras.optimizers.SGD(
 		learning_rate=LEARNING_RATE,
@@ -73,9 +74,12 @@ def fit_models():
 				loss='sparse_categorical_crossentropy',
 				metrics=['accuracy'])
 	
+	# Loading the data and normalizing its values {0-1}
 	(X_train, y_train), (X_test, y_test) = load_mnist_digits()
 	X_train, X_test = X_train / 255.0, X_test / 255.0
 
+	# Creates a ImageDataGenerator which augments images
+	# in parallel while training.
 	datagen= ImageDataGenerator(
 			rotation_range=20,
 			width_shift_range=0.2,
@@ -88,28 +92,20 @@ def fit_models():
 	X_train = X_train[..., tf.newaxis]
 	X_test = X_test[..., tf.newaxis]
 
-
+	# Fitting the ImageDataGenerator with the training data
 	datagen.fit(X_train)
-	#cnn.fit_generator(datagen.flow(
-	#	X_train,
-	#	y_train, 
-	#	batch_size=BATCH_S),
-	#	epochs=EPOCHS,
-	#	verbose=1,
-	#	shuffle=True,
-	#	validation_data=(X_test, y_test))
 
-	#history_cnn = cnn.fit(
-	#	x=X_train, 
-	#	y=y_train,
-	#	epochs=EPOCHS,
-	#	batch_size=BATCH_S,
-	#	shuffle=True,
-	#	validation_data=(X_test, y_test),
-	#	)
+	print('Training CNN..')
+	cnn.fit_generator(datagen.flow(
+		X_train,
+		y_train, 
+		batch_size=BATCH_S),
+		epochs=EPOCHS,
+		verbose=1,
+		shuffle=True,
+		validation_data=(X_test, y_test))
 
-	#cnn.save_weights('./checkpoints/checkpoint_1')
-
+	print('Training DNN..')
 	dnn.fit_generator(datagen.flow(
 		X_train,
 		y_train, 
@@ -118,14 +114,23 @@ def fit_models():
 		verbose=1,
 		shuffle=True,
 		validation_data=(X_test, y_test))
-	#history_dnn = dnn.fit(
-	#	x=X_train, 
-	#	y=y_train,
-	#	epochs=EPOCHS,
-	#	batch_size=BATCH_S,
-	#	shuffle=True,
-	#	validation_data=(X_test, y_test),
-	#	)
+
+	cnn.save_weights('./checkpoints/checkpoint_1')
 	dnn.save_weights('./checkpoints/dnn/checkpoints_1')
 
-#fit_models()
+#history_cnn = cnn.fit(
+#	x=X_train, 
+#	y=y_train,
+#	epochs=EPOCHS,
+#	batch_size=BATCH_S,
+#	shuffle=True,
+#	validation_data=(X_test, y_test),
+#	)
+	#history_dnn = dnn.fit(
+#	x=X_train, 
+#	y=y_train,
+#	epochs=EPOCHS,
+#	batch_size=BATCH_S,
+#	shuffle=True,
+#	validation_data=(X_test, y_test),
+#	)
