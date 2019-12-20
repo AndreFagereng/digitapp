@@ -1,6 +1,7 @@
 # MNIST data and uploaded files
 data/mnist
 data/downloads
+data/uploaded_img
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

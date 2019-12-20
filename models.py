@@ -1,22 +1,26 @@
 import tensorflow as tf
 from tensorflow.keras import datasets, layers, models
 from utils import load_mnist_digits
+import numpy as np
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 class DNN_model(tf.keras.Model):
 	def __init__(self):
 		super(DNN_model, self).__init__()
-		self.dense1 = tf.keras.layers.Dense(784, activation='relu')
-		self.dense2 = tf.keras.layers.Dense(512, activation='relu')
-		self.dense3 = tf.keras.layers.Dense(256, activation='relu')
-		self.dense4 = tf.keras.layers.Dense(128, activation='relu')
+		self.flatt  = tf.keras.layers.Flatten()
+		self.dense1 = tf.keras.layers.Dense(512, activation='relu', input_shape=(784,))
+		self.dense2 = tf.keras.layers.Dense(256, activation='relu')
+		self.dense3 = tf.keras.layers.Dense(128, activation='relu')
+		self.dense4 = tf.keras.layers.Dense(64, activation='relu')
 		self.softmax = tf.keras.layers.Dense(10, activation='softmax')
 
 	def call(self, inputs):
+		x = self.flatt(inputs)
 		x = self.dense1(x)
 		x = self.dense2(x)
 		x = self.dense3(x)
 		x = self.dense4(x)
-		return self.softmax(5)
+		return self.softmax(x)
 
 
 class CNN_model(tf.keras.Model):
@@ -46,9 +50,9 @@ class CNN_model(tf.keras.Model):
 
 def fit_models():
 
-	EPOCHS  = 20
+	EPOCHS  = 5
 	BATCH_S = 32 
-	LEARNING_RATE = 0.1
+	LEARNING_RATE = 0.5
 	MOMENTUM	  = 0.9
 	
 	optimizer_sgd = tf.keras.optimizers.SGD(
@@ -65,25 +69,63 @@ def fit_models():
 		loss='sparse_categorical_crossentropy',
 		metrics=['accuracy'])
 	
-	cnn.compile(optimizers=optimizer_adam,
+	cnn.compile(optimizers=optimizer_sgd,
 				loss='sparse_categorical_crossentropy',
 				metrics=['accuracy'])
 	
 	(X_train, y_train), (X_test, y_test) = load_mnist_digits()
 	X_train, X_test = X_train / 255.0, X_test / 255.0
-	
+
+	datagen= ImageDataGenerator(
+			rotation_range=20,
+			width_shift_range=0.2,
+			height_shift_range=0.2,
+			horizontal_flip=True
+		)
+
+
 	# Add an axis because fit methods is complaining about dimensions.
 	X_train = X_train[..., tf.newaxis]
 	X_test = X_test[..., tf.newaxis]
-	
-	history_cnn = cnn.fit(
-		x=X_train, 
-		y=y_train,
-		epochs=EPOCHS,
-		batch_size=BATCH_S,
-		shuffle=True,
-		validation_data=(X_test, y_test),
-		)
 
-	cnn.save_weights('./checkpoints/checkpoint_1')
+
+	datagen.fit(X_train)
+	#cnn.fit_generator(datagen.flow(
+	#	X_train,
+	#	y_train, 
+	#	batch_size=BATCH_S),
+	#	epochs=EPOCHS,
+	#	verbose=1,
+	#	shuffle=True,
+	#	validation_data=(X_test, y_test))
+
+	#history_cnn = cnn.fit(
+	#	x=X_train, 
+	#	y=y_train,
+	#	epochs=EPOCHS,
+	#	batch_size=BATCH_S,
+	#	shuffle=True,
+	#	validation_data=(X_test, y_test),
+	#	)
+
+	#cnn.save_weights('./checkpoints/checkpoint_1')
+
+	dnn.fit_generator(datagen.flow(
+		X_train,
+		y_train, 
+		batch_size=BATCH_S),
+		epochs=EPOCHS,
+		verbose=1,
+		shuffle=True,
+		validation_data=(X_test, y_test))
+	#history_dnn = dnn.fit(
+	#	x=X_train, 
+	#	y=y_train,
+	#	epochs=EPOCHS,
+	#	batch_size=BATCH_S,
+	#	shuffle=True,
+	#	validation_data=(X_test, y_test),
+	#	)
+	dnn.save_weights('./checkpoints/dnn/checkpoints_1')
+
 #fit_models()

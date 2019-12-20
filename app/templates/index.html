@@ -21,13 +21,26 @@
     
 
 <select id='algorithm' class="form-control">
-    <option value='DNN'>Dense Neural Network</option>
     <option value='CNN'>Convolutional Neural Network</option>
+    <option value='DNN'>Dense Neural Network</option>
     <!--<option value='TBD'>TBD:Algorithm</option>-->
 </select>
 
-
-
+<h3>Algorithm: 
+    <nobr>
+        <h3 style="display:inline" id="_algorithm"></h3>
+    </nobr> 
+</h3>
+<h3 >Prediction: 
+    <nobr>
+        <h3 style="display:inline" id="prediction"></h3>
+    </nobr> 
+</h3>
+<h3>Confidence: 
+    <nobr>
+        <h3 style="display:inline" id="confidense"></h3>
+    </nobr>
+</h3>
 
 </body>
 
@@ -55,7 +68,15 @@ function save(){
         data:{
             imageBase64: dataURL,
             algorithm: algorithm,
-            }
+            },
+        success:function(response_data){
+            view_data = response_data;
+            console.log(view_data);
+            $('#_algorithm').html(algorithm)
+            $('#prediction').html(view_data['prediction'])
+            $('#confidense').html(view_data['confidense']+'%')
+            console.log('Kommer her')
+        }
         }).done(function() {
             console.log('sent');
         });
