@@ -76,7 +76,7 @@ def fit_models():
 	X_train = X_train[..., tf.newaxis]
 	X_test = X_test[..., tf.newaxis]
 	
-	history = cnn.fit(
+	history_cnn = cnn.fit(
 		x=X_train, 
 		y=y_train,
 		epochs=EPOCHS,

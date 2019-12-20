@@ -23,8 +23,9 @@ def upload_image():
 
 		image_path = save_image(img_decoded)
 		prediction = predict_image(image_path, algorithm)
-
-		return render_template("index.html")
+		return_data = prediction
+		
+		return render_template("index.html", data=return_data)
 
 	return render_template("index.html")
 
@@ -57,7 +58,12 @@ def predict_image(image_path, model):
 		return np.argmax(prediction)
 
 	elif model == 'DNN':
-		pass
+		dnn = DNN_model()
+		dnn.load_weights('./checkpoints/dnn/checkpoints_1')
+
+		prediction = dnn.predict(image)
+		argmax     = np.argmax(prediction)
+
 
 	return 1
 
