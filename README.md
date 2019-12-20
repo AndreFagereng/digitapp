@@ -1,4 +1,4 @@
-![alt text](https://raw.githubusercontent.com/AndreFagereng/digitapp/screenshot.png)
+![alt text](https://github.com/AndreFagereng/digitapp/blob/master/screenshot.pngg)
 
 
 # Digit recognizer
