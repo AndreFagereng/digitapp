@@ -8,39 +8,63 @@
 
 </head>
 
-<body>
-  <h1 style="color: blue">Digit Recognizer</h1>
-  <p>Draw a single number from 0-9 and choose algorithm to be used</p>
-    
-<canvas id="canvas" height="300px" width="300px" style="border:1px solid #000000;"></canvas>
+<body style="background-color:#F5F5F5" >
 
-<div>
-    <input type="submit" class="btn btn-primary" onclick="save()">
-    <input type="submit" id='clear' value='Clear' class="btn btn-primary">
+    
+    <div align="center"style="background-color:#0B4150" >
+      <h1 style="color: #F5F5F5">Digit Recognizer</h1>
+      <p style="color: #F5F5F5">Draw a single number from 0-9 and choose algorithm to be used</p>
+    </div>
+  <hr>
+<div class="row" >
+    
+
+    
+    <div class="col-3" style="  margin-left:5%">
+    <h3 align='center'>Algorithm output</h3>
+    
+    <h4>Algorithm: 
+        <nobr>
+            <h3 style="display:inline" id="_algorithm"></h3>
+        </nobr> 
+    </h4>
+    <h4 >Prediction: 
+        <nobr>
+            <h3 style="display:inline" id="prediction"></h3>
+        </nobr> 
+    </h4>
+    <h4>Confidence: 
+        <nobr>
+            <h3 style="display:inline" id="confidense"></h3>
+        </nobr>
+    </h4>
+    <select id='algorithm' class="form-control" style="margin-top:10%">
+        <option value='CNN'>Convolutional Neural Network</option>
+        <option value='DNN'>Dense Neural Network</option>
+        <!--<option value='TBD'>TBD:Algorithm</option>-->
+        </select>
+    </div>
+   <canvas id="canvas" height="300px" width="300px" style="border:1px solid #000000; margin-left:2%"></canvas>
+       
+    <div align="center" class="col-5" style="">
+    <h2>Howto</h2>
+        <ol align="left">
+            <li>Draw a number between 0-9</li>
+            <li>Choose an algorithm to predict the image</li>
+            <li>Click PREDICT and observe prediction and confidence on the left</li>
+            <li>Optional: Without clearing the canvas, choose another algorithm and see what it predicts!</li>
+        </ol>
+        <p>Networks are trained with MNIST digit dataset(with augmentation) with accuracies 95> percent.</p>
+
+ <input type="submit" value='Predict' class="btn btn-primary" onclick="save()">
+        <input type="submit" id='clear' value='Clear' class="btn btn-primary">
+  </div>
+
 </div>
+<div align="center" style="width:100%; margin-top:2.5%">
     
-
-<select id='algorithm' class="form-control">
-    <option value='CNN'>Convolutional Neural Network</option>
-    <option value='DNN'>Dense Neural Network</option>
-    <!--<option value='TBD'>TBD:Algorithm</option>-->
-</select>
-
-<h3>Algorithm: 
-    <nobr>
-        <h3 style="display:inline" id="_algorithm"></h3>
-    </nobr> 
-</h3>
-<h3 >Prediction: 
-    <nobr>
-        <h3 style="display:inline" id="prediction"></h3>
-    </nobr> 
-</h3>
-<h3>Confidence: 
-    <nobr>
-        <h3 style="display:inline" id="confidense"></h3>
-    </nobr>
-</h3>
+       
+</div>
 
 </body>
 
@@ -109,7 +133,7 @@ var clickY = new Array();
 var clickDrag = new Array();
 var paint;
 document.getElementById('clear').addEventListener('click', function() {
-        context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillRect(0, 0, canvas.width, canvas.height);
     clickX = new Array()
     clickY = new Array()
 
@@ -122,6 +146,7 @@ function addClick(x, y, dragging){
 }
 
 function redraw(){
+
   context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
   context.fillStyle = "black"
   context.fillRect(0, 0, canvas.width, canvas.height);
