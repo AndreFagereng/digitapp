@@ -18,7 +18,7 @@ requirements.txt
 
 
 ```
-git clone https://github.com/AndreFagereng/django-portfolio.git
+git clone https://github.com/AndreFagereng/digitapp.git
 ```
 
 Running the solution
