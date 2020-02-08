@@ -28,7 +28,7 @@ In your virtual environment run the following commands
 Install requirements
 
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 First time running the clone 
